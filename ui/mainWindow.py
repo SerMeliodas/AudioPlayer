@@ -9,7 +9,6 @@ from PySide6.QtWidgets import QGridLayout,QMainWindow,QPushButton, QWidget, QHBo
 
 from ui.playList import PlayList
 from ui.menuBar import MenuBar
-from ui.controlButtons import ControlButtons
 
 
 class MainWindow(QMainWindow):
@@ -35,6 +34,21 @@ class MainWindow(QMainWindow):
         self.playListWidget = PlayList(self.gridLayoutWidget)
         self.gridLayout.addWidget(self.playListWidget)
 
-        self.controlButtons = ControlButtons(self.gridLayoutWidget)
-        self.gridLayout.addWidget(self.controlButtons)
+        self.controlButtonsWidget = QWidget(self.gridLayoutWidget)
+        self.controlButtonsLayout = QHBoxLayout(self.gridLayoutWidget)
+        self.controlButtonsWidget.setLayout(self.controlButtonsLayout)
+        
+        self.pushButtonPlay = QPushButton(self.controlButtonsWidget)
+        self.pushButtonPlay.setText(u"play/stop")
 
+        self.pushButtonPrev = QPushButton(self.controlButtonsWidget)
+        self.pushButtonPrev.setText(u"<")
+        
+        self.pushButtonNext = QPushButton(self.controlButtonsWidget)
+        self.pushButtonNext.setText(u">")
+        
+        self.controlButtonsLayout.addWidget(self.pushButtonPrev)      
+        self.controlButtonsLayout.addWidget(self.pushButtonPlay)
+        self.controlButtonsLayout.addWidget(self.pushButtonNext)
+
+        self.gridLayout.addWidget(self.controlButtonsWidget)

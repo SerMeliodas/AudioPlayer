@@ -19,12 +19,12 @@ class PlayList(QListWidget):
         #if play list is not empty
         if self.count() != 0:
             self.clear()
-        #if was dropped folder instead of array of files
+        #if was dropped folder instead of files array
         if len(files) == 1 and Path(files[0]).is_dir():
             self.folder = Path(files[0])
             for file in Path(files[0]).iterdir():
                 QListWidgetItem(Path(file).name, self)
-        #if was dropped array of files
+        #if was dropped files array
         else:        
             self.folder = Path(files[0]).parent
             for file in files:
