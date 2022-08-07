@@ -23,7 +23,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.container)
         self.container.setObjectName(u"container")
 
-        self.menuBar = MenuBar()
+        self.menuBar = MenuBar(self.container)
         self.setMenuBar(self.menuBar)
 
         self.gridLayoutWidget = QWidget(self.container)
