@@ -1,7 +1,7 @@
 import os
 from PySide6.QtWidgets import QListWidget, QListWidgetItem
 from PySide6.QtCore import Signal, Qt, QRect
-
+from pygame import mixer
 from pathlib import Path
 
 class PlayList(QListWidget):
@@ -13,15 +13,22 @@ class PlayList(QListWidget):
         self.setAcceptDrops(True)
         self.folder = str()
         self.fileDropped.connect(self.musicOpen)
+        self.itemDoubleClicked.connect(self.playMusicOnItemDoubleclick)
     
     def musicOpen(self, files):
         if len(files) == 1 and Path(files[0]).is_dir():
+            self.folder = Path(files[0])
             for file in Path(files[0]).iterdir():
                 QListWidgetItem(Path(file).name, self)
         else:        
+            self.folder = Path(files[0]).parent
             for file in files:
                 if Path(file).exists():
                     QListWidgetItem(Path(file).name, self)
+
+    def playMusicOnItemDoubleclick(self, music):
+        mixer.music.load(f"{self.folder}\{music.text()}")
+        mixer.music.play()
 
     def getFolder(self) -> str:
         return self.folder
