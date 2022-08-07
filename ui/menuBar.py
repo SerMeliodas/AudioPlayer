@@ -25,6 +25,8 @@ class MenuBar(QMenuBar):
         self.actionFolderOpen.triggered.connect(self.openFolder)
         
     def openFolder(self):
+        if self.parent().playListWidget.count() != 0:
+            self.parent().playListWidget.clear()
         folder = QFileDialog.getExistingDirectory()
         self.parent().playListWidget.setFolder(folder)
         for file in Path(folder).iterdir():
