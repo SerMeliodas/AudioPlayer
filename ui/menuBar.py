@@ -25,8 +25,10 @@ class MenuBar(QMenuBar):
         self.actionFolderOpen.triggered.connect(self.openFolder)
         
     def openFolder(self):
+        #if play list is not empty
         if self.parent().playListWidget.count() != 0:
             self.parent().playListWidget.clear()
+        #add files in play list
         folder = QFileDialog.getExistingDirectory()
         self.parent().playListWidget.setFolder(folder)
         for file in Path(folder).iterdir():
