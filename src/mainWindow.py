@@ -1,14 +1,12 @@
 import os
 
 from pygame import mixer
-from pathlib import PurePath
-from typing import Container
 from PySide6.QtCore import QCoreApplication, QDate, QDateTime, QLocale, Qt
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QGridLayout,QMainWindow,QPushButton, QWidget, QHBoxLayout
 
-from ui.playList import PlayList
-from ui.menuBar import MenuBar
+from src.playList import PlayList
+from src.menuBar import MenuBar
 
 
 class MainWindow(QMainWindow):
@@ -55,9 +53,12 @@ class MainWindow(QMainWindow):
         self.gridLayout.addWidget(self.controlButtonsWidget)
     
     def togglePlay(self):
+        # if selected another song
         if self.playListWidget.getCurrentSong() != self.playListWidget.currentItem():
             self.playListWidget.playMusic(self.playListWidget.currentItem())
+        # if nothing else selected just pause
         elif self.playListWidget.getCurrentSong() == self.playListWidget.currentItem() and mixer.music.get_busy():
             self.playListWidget.pauseMusic()
+        # else unpause
         else:
             self.playListWidget.unpauseMusic()

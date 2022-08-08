@@ -12,21 +12,20 @@ class PlayList(QListWidget):
         super().__init__(parent)
         self.setAcceptDrops(True)
         self.currentSong = None
-        print(self.currentSong)
         self.folder = str()
         self.fileDropped.connect(self._musicOpen)
         self.itemDoubleClicked.connect(self.playMusic)
     
     def _musicOpen(self, files):
-        #if play list is not empty
+        # if play list is not empty
         if self.count() != 0:
             self.clear()
-        #if was dropped folder instead of files array
+        # if was dropped folder instead of files array
         if len(files) == 1 and Path(files[0]).is_dir():
             self.folder = Path(files[0])
             for file in Path(files[0]).iterdir():
                 QListWidgetItem(Path(file).name, self)
-        #if was dropped files array
+        # if was dropped files array
         else:        
             self.folder = Path(files[0]).parent
             for file in files:
