@@ -40,6 +40,7 @@ class MainWindow(QMainWindow):
         
         self.pushButtonPlay = QPushButton(self.controlButtonsWidget)
         self.pushButtonPlay.setText(u"play/stop")
+        self.pushButtonPlay.clicked.connect(self.togglePlay)
 
         self.pushButtonPrev = QPushButton(self.controlButtonsWidget)
         self.pushButtonPrev.setText(u"<")
@@ -52,3 +53,11 @@ class MainWindow(QMainWindow):
         self.controlButtonsLayout.addWidget(self.pushButtonNext)
 
         self.gridLayout.addWidget(self.controlButtonsWidget)
+    
+    def togglePlay(self):
+        if self.playListWidget.getCurrentSong() != self.playListWidget.currentItem():
+            self.playListWidget.playMusic(self.playListWidget.currentItem())
+        elif self.playListWidget.getCurrentSong() == self.playListWidget.currentItem() and mixer.music.get_busy():
+            self.playListWidget.pauseMusic()
+        else:
+            self.playListWidget.unpauseMusic()

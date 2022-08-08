@@ -11,11 +11,13 @@ class PlayList(QListWidget):
     def __init__(self, parent= None) -> None:
         super().__init__(parent)
         self.setAcceptDrops(True)
+        self.currentSong = None
+        print(self.currentSong)
         self.folder = str()
-        self.fileDropped.connect(self.musicOpen)
-        self.itemDoubleClicked.connect(self.playMusicOnItemDoubleclick)
+        self.fileDropped.connect(self._musicOpen)
+        self.itemDoubleClicked.connect(self.playMusic)
     
-    def musicOpen(self, files):
+    def _musicOpen(self, files):
         #if play list is not empty
         if self.count() != 0:
             self.clear()
@@ -31,9 +33,26 @@ class PlayList(QListWidget):
                 if Path(file).exists():
                     QListWidgetItem(Path(file).name, self)
 
-    def playMusicOnItemDoubleclick(self, music):
-        mixer.music.load(f"{self.folder}\{music.text()}")
+    def playMusic(self, music):
+        mixer.music.load(f"{self.getFolder()}\{music.text()}")
+        self.setCurrentSong(music)
         mixer.music.play()
+
+    def stopMusic(self):
+        mixer.music.stop()
+        mixer.music.unload()
+
+    def pauseMusic(self):
+        mixer.music.pause()
+
+    def unpauseMusic(self):
+        mixer.music.unpause()
+
+    def getCurrentSong(self):
+        return self.currentSong
+    
+    def setCurrentSong(self, currentSong):
+        self.currentSong = currentSong
 
     def getFolder(self) -> str:
         return self.folder
@@ -60,7 +79,7 @@ class PlayList(QListWidget):
             links = list()
             for url in event.mimeData().urls():
                 links.append(str(url.toLocalFile()))
-            self.folder = Path(links[0]).parent
+            self.setFolder(Path(links[0]).parent)
             self.fileDropped.emit(links)
         else:
             event.ignore()

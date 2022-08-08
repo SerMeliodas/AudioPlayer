@@ -22,9 +22,9 @@ class MenuBar(QMenuBar):
         self.addAction(self.FileMenu.menuAction())
         self.FileMenu.addAction(self.actionFolderOpen)
 
-        self.actionFolderOpen.triggered.connect(self.openFolder)
+        self.actionFolderOpen.triggered.connect(self._openFolder)
         
-    def openFolder(self):
+    def _openFolder(self):
         #if play list is not empty
         if self.parent().playListWidget.count() != 0:
             self.parent().playListWidget.clear()
