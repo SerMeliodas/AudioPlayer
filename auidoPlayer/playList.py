@@ -11,8 +11,8 @@ class PlayList(QListWidget):
     def __init__(self, parent= None) -> None:
         super().__init__(parent)
         self.setAcceptDrops(True)
-        self.currentSong = None
-        self.folder = str()
+        self._currentSong = None
+        self._directory = str()
         self.fileDropped.connect(self._musicOpen)
         self.itemDoubleClicked.connect(self.playMusic)
     
@@ -22,20 +22,21 @@ class PlayList(QListWidget):
             self.clear()
         # if was dropped folder instead of files array
         if len(files) == 1 and Path(files[0]).is_dir():
-            self.folder = Path(files[0])
+            self._directory = Path(files[0])
             for file in Path(files[0]).iterdir():
                 QListWidgetItem(Path(file).name, self)
         # if was dropped files array
         else:        
-            self.folder = Path(files[0]).parent
+            self._directory = Path(files[0]).parent
             for file in files:
                 if Path(file).exists():
                     QListWidgetItem(Path(file).name, self)
 
     def playMusic(self, music):
-        mixer.music.load(f"{self.getFolder()}\{music.text()}")
-        self.setCurrentSong(music)
+        mixer.music.load(f"{self._directory}\{music.text()}")
         mixer.music.play()
+        self._currentSong = music
+
 
     def stopMusic(self):
         mixer.music.stop()
@@ -47,17 +48,20 @@ class PlayList(QListWidget):
     def unpauseMusic(self):
         mixer.music.unpause()
 
-    def getCurrentSong(self):
-        return self.currentSong
+    def getCurrentSong(self) -> QListWidgetItem:
+        return self._currentSong
     
-    def setCurrentSong(self, currentSong):
-        self.currentSong = currentSong
+    def getDirectory(self) -> str:
+        return self._directory
 
-    def getFolder(self) -> str:
-        return self.folder
-    
+    def getSongPath(self) -> str:
+        return f"{self._directory}\{self._currentSong.text()}"
+
+    def setCurrentSong(self, currentSong):
+        self._currentSong = currentSong
+
     def setFolder(self, folder) -> None:
-        self.folder = folder
+        self._directory = folder
 
     def dragEnterEvent(self, event) -> None:
         if event.mimeData().hasUrls:

@@ -6,7 +6,7 @@ from PySide6.QtMultimedia import QMediaPlayer, QAudioOutput
 from PySide6.QtCore import QTimer
 from PySide6.QtGui import QAction
 
-from src import MainWindow
+from auidoPlayer import MainWindow
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

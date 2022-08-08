@@ -1,4 +1,4 @@
-from src.mainWindow import MainWindow
+from auidoPlayer.mainWindow import MainWindow
 from pygame import mixer
 
 mixer.init()
