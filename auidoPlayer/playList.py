@@ -4,6 +4,7 @@ from PySide6.QtCore import Signal, Qt, QRect
 from pygame import mixer
 from pathlib import Path
 
+
 class PlayList(QListWidget):
 
     fileDropped = Signal(list)
@@ -12,6 +13,7 @@ class PlayList(QListWidget):
         super().__init__(parent)
         self.setAcceptDrops(True)
         self._currentSong = None
+        self._timer = None
         self._directory = str()
         self.fileDropped.connect(self._musicOpen)
         self.itemDoubleClicked.connect(self.playMusic)
@@ -35,6 +37,7 @@ class PlayList(QListWidget):
     def playMusic(self, music):
         mixer.music.load(f"{self._directory}\{music.text()}")
         mixer.music.play()
+        self._timer.start()
         self._currentSong = music
 
 
@@ -44,10 +47,11 @@ class PlayList(QListWidget):
 
     def pauseMusic(self):
         mixer.music.pause()
+        self._timer.stop()
 
     def unpauseMusic(self):
         mixer.music.unpause()
-
+        self._timer.start()
     def getCurrentSong(self) -> QListWidgetItem:
         return self._currentSong
     
@@ -62,6 +66,9 @@ class PlayList(QListWidget):
 
     def setFolder(self, folder) -> None:
         self._directory = folder
+
+    def setTimer(self, timer):
+        self._timer = timer
 
     def dragEnterEvent(self, event) -> None:
         if event.mimeData().hasUrls:

@@ -9,7 +9,9 @@ from mutagen.mp3 import MP3
 
 from auidoPlayer.playList import PlayList
 from auidoPlayer.menuBar import MenuBar
-from auidoPlayer.seekBar import SeekBar 
+from auidoPlayer.progressBar import ProgressBar 
+import pyglet
+
 
 class MainWindow(QMainWindow):
     def __init__(self, parent= None) -> None:
@@ -44,6 +46,7 @@ class MainWindow(QMainWindow):
         
         self.pushButtonPlay = QPushButton(self.controlButtonsWidget)
         self.pushButtonPlay.setText(u"play/stop")
+        self.pushButtonPlay.setShortcut(u"Space")
         self.pushButtonPlay.clicked.connect(self.togglePlay)
 
         self.pushButtonPrev = QPushButton(self.controlButtonsWidget)
@@ -57,16 +60,21 @@ class MainWindow(QMainWindow):
         self.controlButtonsLayout.addWidget(self.pushButtonNext)
 
         # seek bar
-        self.seekBar = SeekBar(self.container)       
-        self.gridLayout.addWidget(self.seekBar)
-    
+        self.progressBar = ProgressBar(self.container)       
+        self.gridLayout.addWidget(self.progressBar)
+
+        self.playListWidget.setTimer(self.progressBar.getTimer())
+
         self.gridLayout.addWidget(self.controlButtonsWidget)
 
+        self.player = pyglet.media.Player()
+
     def togglePlay(self):
+            
         # if selected another song
         if self.playListWidget.getCurrentSong() != self.playListWidget.currentItem():
             self.playListWidget.playMusic(self.playListWidget.currentItem())
-            self.seekBar.setSongLength(MP3(self.playListWidget.getSongPath()).info.length)
+            self.progressBar.setSongLength(MP3(self.playListWidget.getSongPath()).info.length)
         # if nothing else selected just pause
         elif self.playListWidget.getCurrentSong() == self.playListWidget.currentItem() and mixer.music.get_busy():
             self.playListWidget.pauseMusic()
